@@ -1,231 +1,265 @@
-var util = require('util');
-var path = require('path');
-var EE = require('events').EventEmitter;
+const path = require('node:path')
+const {
+  EventEmitter
+} = require('events')
 
-var extend = require('extend');
-var resolve = require('resolve');
-var flaggedRespawn = require('flagged-respawn');
-var isPlainObject = require('is-plain-object');
-var mapValues = require('object.map');
-var fined = require('fined');
+const extend = require('extend')
+const resolve = require('resolve')
+const flaggedRespawn = require('flagged-respawn')
+const {
+  isPlainObject
+} = require('is-plain-object')
+const objectMap = require('object.map')
+const fined = require('fined')
 
-var findCwd = require('./lib/find_cwd');
-var findConfig = require('./lib/find_config');
-var fileSearch = require('./lib/file_search');
-var parseOptions = require('./lib/parse_options');
-var silentRequire = require('./lib/silent_require');
-var buildConfigName = require('./lib/build_config_name');
-var registerLoader = require('./lib/register_loader');
-var getNodeFlags = require('./lib/get_node_flags');
+const getCwd = require('./lib/get-cwd')
+const findConfig = require('./lib/find-config')
+const fileSearch = require('./lib/file-search')
+const silentRequire = require('./lib/silent-require')
 
-function Liftoff(opts) {
-  EE.call(this);
-  extend(this, parseOptions(opts));
-}
-util.inherits(Liftoff, EE);
+const getOpts = require('./lib/get-opts')
+const getSearchNames = require('./lib/get-search-names')
+const registerLoader = require('./lib/register-loader')
+const preloadModules = require('./lib/preload-modules')
+const nodeFlags = require('./lib/node-flags')
 
-Liftoff.prototype.requireLocal = function(module, basedir) {
-  try {
-    var result = require(resolve.sync(module, { basedir: basedir }));
-    this.emit('require', module, result);
-    return result;
-  } catch (e) {
-    this.emit('requireFail', module, e);
-  }
-};
+class Liftoff extends EventEmitter {
+  constructor (opts) {
+    super()
 
-Liftoff.prototype.buildEnvironment = function(opts) {
-  opts = opts || {};
+    extend(this, getOpts(opts))
 
-  // get modules we want to preload
-  var preload = opts.require || [];
-
-  // ensure items to preload is an array
-  if (!Array.isArray(preload)) {
-    preload = [preload];
+    this.requireLocal = this.requireLocal.bind(this)
+    this.buildEnvironment = this.buildEnvironment.bind(this)
+    this.handleV8Flags = this.handleV8Flags.bind(this)
+    this.prepare = this.prepare.bind(this)
+    this.execute = this.execute.bind(this)
+    this.launch = this.launch.bind(this)
   }
 
-  // make a copy of search paths that can be mutated for this run
-  var searchPaths = this.searchPaths.slice();
-
-  // calculate current cwd
-  var cwd = findCwd(opts);
-
-  // if cwd was provided explicitly, only use it for searching config
-  if (opts.cwd) {
-    searchPaths = [cwd];
-  } else {
-    // otherwise just search in cwd first
-    searchPaths.unshift(cwd);
-  }
-
-  // calculate the regex to use for finding the config file
-  var configNameSearch = buildConfigName({
-    configName: this.configName,
-    extensions: Object.keys(this.extensions),
-  });
-
-  // calculate configPath
-  var configPath = findConfig({
-    configNameSearch: configNameSearch,
-    searchPaths: searchPaths,
-    configPath: opts.configPath,
-  });
-
-  // if we have a config path, save the directory it resides in.
-  var configBase;
-  if (configPath) {
-    configBase = path.dirname(configPath);
-    // if cwd wasn't provided explicitly, it should match configBase
-    if (!opts.cwd) {
-      cwd = configBase;
+  requireLocal (module, basedir) {
+    try {
+      const result = require(resolve.sync(module, { basedir }))
+      this.emit('require', module, result)
+      return result
+    } catch (e) {
+      this.emit('requireFail', module, e)
     }
   }
 
-  // TODO: break this out into lib/
-  // locate local module and package next to config or explicitly provided cwd
-  /* eslint one-var: 0 */
-  var modulePath, modulePackage;
-  try {
-    var delim = path.delimiter;
-    var paths = (process.env.NODE_PATH ? process.env.NODE_PATH.split(delim) : []);
-    modulePath = resolve.sync(this.moduleName, { basedir: configBase || cwd, paths: paths });
-    modulePackage = silentRequire(fileSearch('package.json', [modulePath]));
-  } catch (e) {}
+  getCwd (opts = {}) {
+    return getCwd(opts)
+  }
 
-  // if we have a configuration but we failed to find a local module, maybe
-  // we are developing against ourselves?
-  if (!modulePath && configPath) {
-    // check the package.json sibling to our config to see if its `name`
-    // matches the module we're looking for
-    var modulePackagePath = fileSearch('package.json', [configBase]);
-    modulePackage = silentRequire(modulePackagePath);
-    if (modulePackage && modulePackage.name === this.moduleName) {
-      // if it does, our module path is `main` inside package.json
-      modulePath = path.join(path.dirname(modulePackagePath), modulePackage.main || 'index.js');
-      cwd = configBase;
+  getEnv (opts = {}) {
+    return this.buildEnvironment(opts)
+  }
+
+  buildEnvironment (opts = {}) {
+    // get modules we want to preload
+    let preload = opts.require || []
+
+    // ensure items to preload is an array
+    if (!Array.isArray(preload)) {
+      preload = [preload].filter(Boolean)
+    }
+
+    // duplicate search paths (to allow mutations)
+    let searchPaths = this.searchPaths.slice()
+
+    // get the cwd
+    let cwd = getCwd(opts) // || process.cwd()
+
+    // if cwd was provided then use it for search paths
+    if (opts.cwd) {
+      searchPaths = [cwd]
     } else {
-      // clear if we just required a package for some other project
-      modulePackage = {};
+      // otherwise add it to the top of search paths
+      searchPaths.unshift(cwd)
     }
-  }
 
-  var exts = this.extensions;
-  var eventEmitter = this;
+    // compute the search names
+    const searchNames = getSearchNames({
+      configName: this.configName,
+      extensions: Object.keys(this.extensions)
+    })
 
-  var configFiles = {};
-  if (isPlainObject(this.configFiles)) {
-    var notfound = { path: null };
-    configFiles = mapValues(this.configFiles, function(prop, name) {
-      var defaultObj = { name: name, cwd: cwd, extensions: exts };
-      return mapValues(prop, function(pathObj) {
-        var found = fined(pathObj, defaultObj) || notfound;
-        if (isPlainObject(found.extension)) {
-          registerLoader(eventEmitter, found.extension, found.path, cwd);
+    // compute the configPath
+    const configPath = findConfig({
+      searchNames,
+      searchPaths,
+      configPath: opts.configPath
+    })
+
+    // if we have a config path assign it to config base
+    let configBase = cwd
+    if (configPath) {
+      configBase = path.dirname(configPath)
+    }
+
+    // if cwd wasn't provided it should match configBase
+    if (!opts.cwd) {
+      cwd = configBase
+    }
+
+    // locate module in config base or cwd
+    let modulePath
+    let modulePackage = {}
+    try {
+      const {
+        env: {
+          NODE_PATH
         }
-        return found.path;
-      });
-    });
-  }
+      } = process
 
-  return {
-    cwd: cwd,
-    require: preload,
-    configNameSearch: configNameSearch,
-    configPath: configPath,
-    configBase: configBase,
-    modulePath: modulePath,
-    modulePackage: modulePackage || {},
-    configFiles: configFiles,
-  };
-};
+      const paths = (
+        NODE_PATH
+          ? NODE_PATH.split(path.delimiter)
+          : []
+      )
 
-Liftoff.prototype.handleFlags = function(cb) {
-  if (typeof this.v8flags === 'function') {
-    this.v8flags(function(err, flags) {
-      if (err) {
-        cb(err);
+      modulePath = resolve.sync(this.moduleName, { basedir: configBase || cwd, paths })
+      const modulePackagePath = fileSearch('package.json', [modulePath])
+      modulePackage = silentRequire(modulePackagePath)
+    } catch (e) {
+      const {
+        code
+      } = e
+
+      if (code !== 'MODULE_NOT_FOUND') console.error(e)
+    }
+
+    // if we have a configuration but we failed to find a local module, maybe
+    // we are developing against ourselves?
+    if (!modulePath && configPath) {
+      // check the package.json sibling to our config to see if its `name`
+      // matches the module we're looking for
+      const modulePackagePath = fileSearch('package.json', [configBase])
+      modulePackage = silentRequire(modulePackagePath)
+      if (modulePackage && modulePackage.name === this.moduleName) {
+        // if it does, our module path is `main` inside package.json
+        modulePath = path.join(path.dirname(modulePackagePath), modulePackage.main || 'index.js')
+        // And the current working directory is configBase
+        cwd = configBase
       } else {
-        cb(null, flags);
-      }
-    });
-  } else {
-    process.nextTick(function() {
-      cb(null, this.v8flags);
-    }.bind(this));
-  }
-};
-
-Liftoff.prototype.prepare = function(opts, fn) {
-  if (typeof fn !== 'function') {
-    throw new Error('You must provide a callback function.');
-  }
-
-  process.title = this.processTitle;
-
-  var completion = opts.completion;
-  if (completion && this.completions) {
-    return this.completions(completion);
-  }
-
-  var env = this.buildEnvironment(opts);
-
-  fn.call(this, env);
-};
-
-Liftoff.prototype.execute = function(env, forcedFlags, fn) {
-  if (typeof forcedFlags === 'function') {
-    fn = forcedFlags;
-    forcedFlags = undefined;
-  }
-  if (typeof fn !== 'function') {
-    throw new Error('You must provide a callback function.');
-  }
-
-  this.handleFlags(function(err, flags) {
-    if (err) {
-      throw err;
-    }
-    flags = flags || [];
-
-    flaggedRespawn(flags, process.argv, forcedFlags, execute.bind(this));
-
-    function execute(ready, child, argv) {
-      if (child !== process) {
-        var execArgv = getNodeFlags.fromReorderedArgv(argv);
-        this.emit('respawn', execArgv, child);
-      }
-      if (ready) {
-        preloadModules(this, env);
-        registerLoader(this, this.extensions, env.configPath, env.cwd);
-        fn.call(this, env, argv);
+        // clear if we just required a package for some other project
+        modulePackage = {}
       }
     }
-  }.bind(this));
-};
 
-Liftoff.prototype.launch = function(opts, fn) {
-  if (typeof fn !== 'function') {
-    throw new Error('You must provide a callback function.');
+    let configFiles = {}
+    if (isPlainObject(this.configFiles)) {
+      const extensions = this.extensions
+      const notFound = {
+        path: null
+      }
+
+      configFiles = objectMap(this.configFiles, (pathSpecs, name) => {
+        const defaultPathSpec = {
+          name,
+          cwd,
+          extensions
+        }
+
+        return objectMap(pathSpecs, (pathSpec) => {
+          const {
+            extension,
+            path
+          } = fined(pathSpec, defaultPathSpec) || notFound
+
+          registerLoader(this, extension, path, cwd)
+
+          return path
+        })
+      })
+    }
+
+    return {
+      cwd,
+      require: preload,
+      searchNames,
+      configPath,
+      configBase,
+      modulePath,
+      modulePackage,
+      configFiles
+    }
   }
 
-  var self = this;
+  handleV8Flags (done) {
+    if (this.v8flags instanceof Function) {
+      this.v8flags((e, flags) => {
+        if (e) {
+          done(e)
+        } else {
+          done(null, flags)
+        }
+      })
+    } else {
+      process.nextTick(() => {
+        done(null, this.v8flags)
+      })
+    }
+  }
 
-  self.prepare(opts, function(env) {
-    var forcedFlags = getNodeFlags.arrayOrFunction(opts.forcedFlags, env);
-    self.execute(env, forcedFlags, fn);
-  });
-};
+  prepare (opts, done) {
+    if (done instanceof Function !== true) {
+      throw new Error('You must provide a callback function.')
+    }
 
-function preloadModules(inst, env) {
-  var basedir = env.cwd;
-  env.require.filter(toUnique).forEach(function(module) {
-    inst.requireLocal(module, basedir);
-  });
+    process.title = this.processTitle
+
+    const completion = opts.completion
+    if (completion && this.completions) {
+      return this.completions(completion)
+    }
+
+    const env = this.buildEnvironment(opts)
+
+    done.call(this, env)
+  }
+
+  execute (env, forcedFlags, done) {
+    if (forcedFlags instanceof Function) {
+      done = forcedFlags
+      forcedFlags = undefined
+    }
+
+    if (done instanceof Function !== true) {
+      throw new Error('You must provide a callback function.')
+    }
+
+    this.handleV8Flags((e, flags = []) => {
+      if (e) {
+        throw e
+      }
+
+      flaggedRespawn(flags, process.argv, forcedFlags, (ready, child, argv) => {
+        if (child !== process) {
+          const forcedFlags = nodeFlags.getNodeFlagsFromArgv(argv)
+          this.emit('respawn', forcedFlags, child)
+        }
+
+        if (ready) {
+          preloadModules(this, env)
+          registerLoader(this, this.extensions, env.configPath, env.cwd)
+
+          done.call(this, env, argv)
+        }
+      })
+    })
+  }
+
+  launch (opts, done) {
+    if (done instanceof Function !== true) {
+      throw new Error('You must provide a callback function.')
+    }
+
+    this.prepare(opts, (env) => {
+      const forcedFlags = nodeFlags.getNodeFlags(opts.forcedFlags, env)
+      this.execute(env, forcedFlags, done)
+    })
+  }
 }
 
-function toUnique(elem, index, array) {
-  return array.indexOf(elem) === index;
-}
-
-module.exports = Liftoff;
+module.exports = Liftoff

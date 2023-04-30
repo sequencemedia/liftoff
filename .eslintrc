@@ -1,8 +1,9 @@
 {
-  "extends": "gulp",
-  "rules": {
-    "max-len": [0, 90],
-    "max-statements": [1, 50],
-    "no-empty": ["error", { "allowEmptyCatch": true }]
+  "root": true,
+  "extends": "standard",
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   }
 }

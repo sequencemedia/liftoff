@@ -1,2 +1,5 @@
-coverage/
-test/fixtures/
+.circleci
+.git
+.github
+.husky
+node_modules
