@@ -11,8 +11,6 @@ const fileSearch = require('../../../lib/file-search')
 describe('fileSearch', () => {
   describe('With a valid file name array', () => {
     it('returns a file path', () => {
-      console.log(path.resolve(__dirname, '../../../package.json'))
-
       expect(fileSearch(['package.json'], [process.cwd()]))
         .to.equal(path.resolve(__dirname, '../../../package.json'))
     })
