@@ -19,7 +19,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha -b --recursive test/liftoff"
+    "test": "mocha -b --recursive test/liftoff",
+    "prepare": "husky install"
   },
   "dependencies": {
     "extend": "^3.0.2",
@@ -42,6 +43,7 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "module-alias": "^2.2.2",
     "sinon": "^15.0.4",
