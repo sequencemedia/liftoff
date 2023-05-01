@@ -1,13 +1,15 @@
+require('module-alias/register')
+
 const chai = require('chai')
 const {
   expect
 } = chai
 
-const getOpts = require('../../../lib/get-opts')
+const getOpts = require('~/lib/get-opts')
 
 const NAME = 'MOCK NAME'
 
-describe('getOpts', () => {
+describe('./lib/get-opts', () => {
   describe('With valid arguments', () => {
     describe('With `name`', () => {
       describe('`processTitle`, `moduleName`, and `configFile` are defined', () => {

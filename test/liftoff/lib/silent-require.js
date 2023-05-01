@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 const crypto = require('node:crypto')
 const path = require('node:path')
 
@@ -6,12 +8,12 @@ const {
   expect
 } = chai
 
-const silentRequire = require('../../../lib/silent-require')
+const silentRequire = require('~/lib/silent-require')
 
-describe('silentRequire', () => {
+describe('./lib/silent-require', () => {
   it('requires', () => {
     expect(silentRequire(path.resolve('./package.json')))
-      .to.eql(require('../../../package'))
+      .to.eql(require('~/package'))
   })
 
   it('does not throw', () => {

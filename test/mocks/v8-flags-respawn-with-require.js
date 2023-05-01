@@ -1,4 +1,6 @@
-const Liftoff = require('../..')
+require('module-alias/register')
+
+const Liftoff = require('~/.')
 
 const liftoff = new Liftoff({
   name: 'test',

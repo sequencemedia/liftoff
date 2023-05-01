@@ -1,19 +1,27 @@
+require('module-alias/register')
+
 const chai = require('chai')
 const {
   expect
 } = chai
 const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
 
-const nodeFlags = require('../../../lib/node-flags')
+const {
+  getNodeFlags,
+  getNodeFlagsFromArgv
+} = require('~/lib/node-flags')
 
-describe('nodeFlags', () => {
+chai.use(sinonChai)
+
+describe('./lib/node-flags', () => {
   describe('`getNodeFlags()`', () => {
     describe('The first argument is an array', () => {
       it('returns the array', () => {
-        expect(nodeFlags.getNodeFlags([]))
+        expect(getNodeFlags([]))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(['--lazy', '--use_strict', '--harmony']))
+        expect(getNodeFlags(['--lazy', '--use_strict', '--harmony']))
           .to.have.members(['--lazy', '--harmony', '--use_strict'])
       })
     })
@@ -24,7 +32,7 @@ describe('nodeFlags', () => {
       it('executes the function and returns the result', () => {
         const one = sinon.stub().returns([])
 
-        expect(nodeFlags.getNodeFlags(one, env))
+        expect(getNodeFlags(one, env))
           .to.have.members([])
 
         expect(one)
@@ -32,7 +40,7 @@ describe('nodeFlags', () => {
 
         const two = sinon.stub().returns(['--lazy', '--harmony'])
 
-        expect(nodeFlags.getNodeFlags(two, env))
+        expect(getNodeFlags(two, env))
           .to.have.members(['--lazy', '--harmony'])
 
         expect(two)
@@ -42,35 +50,35 @@ describe('nodeFlags', () => {
 
     describe('The first argument is a string', () => {
       it('returns an array containing the string', () => {
-        expect(nodeFlags.getNodeFlags('--lazy'))
+        expect(getNodeFlags('--lazy'))
           .to.have.members(['--lazy'])
       })
     })
 
     describe('The first argument is neither an array, a function, nor a string', () => {
       it('returns an array', () => {
-        expect(nodeFlags.getNodeFlags(undefined))
+        expect(getNodeFlags(undefined))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(null))
+        expect(getNodeFlags(null))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(true))
+        expect(getNodeFlags(true))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(false))
+        expect(getNodeFlags(false))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(0))
+        expect(getNodeFlags(0))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags(123))
+        expect(getNodeFlags(123))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags({}))
+        expect(getNodeFlags({}))
           .to.have.members([])
 
-        expect(nodeFlags.getNodeFlags({ length: 1 }))
+        expect(getNodeFlags({ length: 1 }))
           .to.have.members([])
       })
     })
@@ -80,28 +88,28 @@ describe('nodeFlags', () => {
     it('returns node flags when arguments are from respawning', () => {
       const command = ['node', '--lazy', '--harmony', '--use_strict', './aaa/bbb/app.js', '--ccc', 'ddd', '-e', 'fff']
 
-      expect(nodeFlags.getNodeFlagsFromArgv(command))
+      expect(getNodeFlagsFromArgv(command))
         .to.deep.equal(['--lazy', '--harmony', '--use_strict'])
     })
 
     it('does not return flags after "--"', () => {
       const command = ['node', '--lazy', '--', '--harmony', '--use_strict', './aaa/bbb/app.js', '--ccc', 'ddd', '-e', 'fff']
 
-      expect(nodeFlags.getNodeFlagsFromArgv(command))
+      expect(getNodeFlagsFromArgv(command))
         .to.deep.equal(['--lazy'])
     })
 
     it('returns node flags when arguments are node flags', () => {
       const command = ['node', '--lazy', '--harmony', '--use_strict']
 
-      expect(nodeFlags.getNodeFlagsFromArgv(command))
+      expect(getNodeFlagsFromArgv(command))
         .to.deep.equal(['--lazy', '--harmony', '--use_strict'])
     })
 
     it('returns an array when arguments have no node flags', () => {
       const command = ['node', './aaa/bbb/app.js', '--aaa', 'bbb', '-c', 'd']
 
-      expect(nodeFlags.getNodeFlagsFromArgv(command))
+      expect(getNodeFlagsFromArgv(command))
         .to.deep.equal([])
     })
   })

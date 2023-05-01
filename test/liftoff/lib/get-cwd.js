@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 const path = require('node:path')
 
 const chai = require('chai')
@@ -5,9 +7,9 @@ const {
   expect
 } = chai
 
-const getCwd = require('../../../lib/get-cwd')
+const getCwd = require('~/lib/get-cwd')
 
-describe('getCwd', () => {
+describe('./lib/get-cwd', () => {
   describe('With `cwd`', () => {
     describe('`cwd` is a string', () => {
       it('returns `cwd`', () => {

@@ -1,12 +1,15 @@
+require('module-alias/register')
+
+const { exec } = require('node:child_process')
+const crypto = require('node:crypto')
+
 const path = require('path')
 const chai = require('chai')
 const { expect } = chai
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const resolve = require('resolve')
-const { exec } = require('node:child_process')
-const crypto = require('crypto')
-const Liftoff = require('../..')
+const Liftoff = require('~')
 
 chai.use(sinonChai)
 

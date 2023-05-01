@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 const crypto = require('node:crypto')
 const path = require('node:path')
 
@@ -6,16 +8,19 @@ const {
   expect
 } = chai
 const sinon = require('sinon')
+const sinonChai = require('sinon-chai')
 
-const registerLoader = require('../../../lib/register-loader')
+const registerLoader = require('~/lib/register-loader')
 
 const {
   EventEmitter
 } = require('events')
 
-const FIXTURES_PATH = path.resolve(__dirname, '../../fixtures/register-loader')
+chai.use(sinonChai)
 
-describe('registerLoader', () => {
+const FIXTURES_PATH = path.resolve('./test/fixtures/register-loader')
+
+describe('./lib/register-loader', () => {
   let eventEmitter
 
   beforeEach(() => {
@@ -23,7 +28,7 @@ describe('registerLoader', () => {
   })
 
   describe('`registerLoader()`', () => {
-    it('Should emit a `require` event when registering a loader succeeds', () => {
+    it('Emits a `require` event when registering a loader succeeds', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-cfg.js')
       const configPath = path.join(FIXTURES_PATH, 'application.cfg')
       const extensions = { '.cfg': loaderPath }
@@ -42,7 +47,7 @@ describe('registerLoader', () => {
         .to.have.been.calledWith(loaderPath)
     })
 
-    it('Should emit only a `require` event when registering a loader both fails and succeeds', () => {
+    it('Emits a `require` event when registering a loader both fails and succeeds', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-conf.js')
       const configPath = path.join(FIXTURES_PATH, 'application.conf')
       const extensions = { '.conf': ['MOCK MODULE NAME', loaderPath] }
@@ -61,7 +66,7 @@ describe('registerLoader', () => {
         .to.have.been.calledWith(loaderPath)
     })
 
-    it('Should emit a `requireFail` event when a loader is not found', () => {
+    it('Emits a `requireFail` event when a loader is not found', () => {
       const loaderPath = path.join(FIXTURES_PATH, crypto.randomUUID())
       const configPath = path.join(FIXTURES_PATH, 'application.tmp')
       const extensions = { '.tmp': ['MOCK MODULE NAME', loaderPath] }
@@ -76,20 +81,23 @@ describe('registerLoader', () => {
 
       registerLoader(eventEmitter, extensions, configPath)
 
+      expect(spy)
+        .to.have.been.calledTwice
+
       expect(spy.firstCall.firstArg)
         .to.equal('MOCK MODULE NAME')
 
       expect(spy.firstCall.lastArg)
         .to.be.instanceOf(Error)
 
-      expect(spy.secondCall.firstArg)
+      expect(spy.lastCall.firstArg)
         .to.equal(loaderPath)
 
-      expect(spy.secondCall.lastArg)
+      expect(spy.lastCall.lastArg)
         .to.be.instanceOf(Error)
     })
 
-    it('Should emit a `requireFail` event when registering a loader fails', () => {
+    it('Emits a `requireFail` event when registering a loader fails', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-fail.js')
       const configPath = path.join(FIXTURES_PATH, 'application.tmp')
       const extensions = { '.tmp': loaderPath }
@@ -105,12 +113,15 @@ describe('registerLoader', () => {
       registerLoader(eventEmitter, extensions, configPath)
 
       expect(spy)
+        .to.have.been.calledOnce
+
+      expect(spy)
         .to.have.been.calledWith(loaderPath)
     })
   })
 
   describe('`extensions`', () => {
-    it('Should do nothing when `extensions` is null', () => {
+    it('Exits silently when `extensions` is null', () => {
       const spy = sinon.spy()
 
       eventEmitter
@@ -130,7 +141,7 @@ describe('registerLoader', () => {
         .not.to.have.been.called
     })
 
-    it('Should do nothing when `extensions` is illegal type', () => {
+    it('Exits silently when `extensions` is illegal type', () => {
       const spy = sinon.spy()
 
       eventEmitter
@@ -152,7 +163,7 @@ describe('registerLoader', () => {
         .not.to.have.been.called
     })
 
-    it('Should do nothing when `extensions` is a string', () => {
+    it('Exits silently when `extensions` is a string', () => {
       const spy = sinon.spy()
 
       eventEmitter
@@ -168,7 +179,7 @@ describe('registerLoader', () => {
   })
 
   describe('`configPath`', () => {
-    it('Should do nothing when `configPath` is null', () => {
+    it('Exits silently when `configPath` is null', () => {
       const extensions0 = ['.js', '.json', '.coffee', '.coffee.md']
       const extensions1 = {
         '.js': null,
@@ -192,7 +203,7 @@ describe('registerLoader', () => {
         .not.to.have.been.called
     })
 
-    it('Should do nothing when `configPath` is illegal type', () => {
+    it('Exits silently when `configPath` is illegal type', () => {
       const extensions0 = ['.js', '.json', '.coffee', '.coffee.md']
       const extensions1 = {
         '.js': null,
@@ -216,7 +227,7 @@ describe('registerLoader', () => {
         .not.to.have.been.called
     })
 
-    it('Should do nothing when `configPath` does not have an extension in `extensions`', () => {
+    it('Exits silently when `configPath` does not have an extension in `extensions`', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-rc.js')
       const configPath = path.join(FIXTURES_PATH, 'application.xxx')
       const extensions = { '.cfg': loaderPath }
@@ -233,7 +244,7 @@ describe('registerLoader', () => {
         .not.to.have.been.called
     })
 
-    it('Should do nothing when `configPath` has an extension which was already registered', () => {
+    it('Exits silently when `configPath` has an extension which was already registered', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-cfg.js')
       const configPath = path.join(FIXTURES_PATH, 'application.cfg')
       const extensions = { '.cfg': loaderPath }
@@ -252,7 +263,7 @@ describe('registerLoader', () => {
   })
 
   describe('`cwd`', () => {
-    it('Should use `cwd` as a base directory', () => {
+    it('Uses `cwd` as a base directory', () => {
       const loaderPath = path.join(FIXTURES_PATH, 'require-rc.js')
       const configPath = 'application.rc'
       const extensions = { '.rc': loaderPath }

@@ -1,3 +1,5 @@
+require('module-alias/register')
+
 const crypto = require('node:crypto')
 const path = require('node:path')
 
@@ -6,9 +8,9 @@ const {
   expect
 } = chai
 
-const findConfig = require('../../../lib/find-config')
+const findConfig = require('~/lib/find-config')
 
-describe('findConfig', () => {
+describe('./lib/find-config', () => {
   describe('With `configName`', () => {
     describe('`configName` is valid', () => {
       it('returns an absolute path', () => {
@@ -27,40 +29,81 @@ describe('findConfig', () => {
 
   describe('Without `configName`', () => {
     it('returns an absolute path to the first config file found', () => {
-      expect(findConfig({ searchNames: ['mochafile.js', 'mochafile.coffee'], searchPaths: ['test/fixtures'] }))
+      expect(findConfig({
+        searchNames: ['mochafile.js', 'mochafile.coffee'],
+        searchPaths: ['./test/fixtures']
+      }))
         .to.equal(path.resolve('./test/fixtures/mochafile.js'))
 
-      expect(findConfig({ searchNames: ['mochafile.js', 'mochafile.coffee'], searchPaths: ['test/fixtures/search-paths', 'test/fixtures/coffee'] }))
+      expect(findConfig({
+        searchNames: ['mochafile.js', 'mochafile.coffee'],
+        searchPaths: ['./test/fixtures/search-paths', './test/fixtures/coffee']
+      }))
         .to.equal(path.resolve('./test/fixtures/search-paths/mochafile.js'))
 
-      expect(findConfig({ searchNames: ['mochafile.js'], searchPaths: ['test/fixtures/search-paths', 'test/fixtures/coffee'] }))
+      expect(findConfig({
+        searchNames: ['mochafile.js'],
+        searchPaths: ['./test/fixtures/search-paths', './test/fixtures/coffee']
+      }))
         .to.equal(path.resolve('./test/fixtures/search-paths/mochafile.js'))
     })
 
     describe('`searchPaths` is invalid', () => {
       it('throws', () => {
-        expect(() => { findConfig({ searchNames: ['mochafile.js', 'mochafile.coffee'] }) })
+        expect(() => {
+          findConfig({
+            searchNames: ['mochafile.js', 'mochafile.coffee']
+          })
+        })
           .to.throw()
 
-        expect(() => { findConfig({ searchNames: ['mochafile.js', 'mochafile.coffee'], searchPaths: null }) })
+        expect(() => {
+          findConfig({
+            searchNames: ['mochafile.js', 'mochafile.coffee'],
+            searchPaths: null
+          })
+        })
           .to.throw()
 
-        expect(() => { findConfig({ searchNames: ['mochafile.js', 'mochafile.coffee'], searchPaths: 'test/fixtures/search-paths' }) })
+        expect(() => {
+          findConfig({
+            searchNames: ['mochafile.js', 'mochafile.coffee'],
+            searchPaths: './test/fixtures/search-paths'
+          })
+        })
           .to.throw()
       })
     })
 
     describe('`searchNames` is invalid', () => {
       it('throws', () => {
-        expect(() => { findConfig({ searchPaths: ['../'] }) }).to.throw()
+        expect(() => {
+          findConfig({
+            searchPaths: ['../']
+          })
+        }).to.throw()
 
-        expect(() => { findConfig({ searchPaths: ['test/fixtures/search-paths', 'test/fixtures/coffee'] }) })
+        expect(() => {
+          findConfig({
+            searchPaths: ['./test/fixtures/search-paths', './test/fixtures/coffee']
+          })
+        })
           .to.throw()
 
-        expect(() => { findConfig({ searchNames: null, searchPaths: ['test/fixtures/search-paths', 'test/fixtures/coffee'] }) })
+        expect(() => {
+          findConfig({
+            searchNames: null,
+            searchPaths: ['./test/fixtures/search-paths', './test/fixtures/coffee']
+          })
+        })
           .to.throw()
 
-        expect(() => { findConfig({ searchNames: '', searchPaths: ['test/fixtures/search-paths', 'test/fixtures/coffee'] }) })
+        expect(() => {
+          findConfig({
+            searchNames: '',
+            searchPaths: ['./test/fixtures/search-paths', './test/fixtures/coffee']
+          })
+        })
           .to.throw()
       })
     })

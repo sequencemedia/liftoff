@@ -1,35 +1,33 @@
+require('module-alias/register')
+
 const chai = require('chai')
 const {
   expect
 } = chai
 
-const getSearchNames = require('../../../lib/get-search-names.js')
+const getSearchNames = require('~/lib/get-search-names')
 
-describe('getSearchNames', () => {
+describe('./lib/get-search-names', () => {
   describe('With valid opts', () => {
     describe('`configName` is a regular expression', () => {
       it('returns an array containing `configName`', () => {
-        const searchNames = /MOCK SEARCH NAMES/
+        const pattern = /MOCK SEARCH NAMES/
 
-        expect(getSearchNames({ configName: searchNames }))
-          .to.have.members([searchNames])
+        expect(getSearchNames({ configName: pattern }))
+          .to.have.members([pattern])
       })
     })
 
     describe('With one extension in `extensions`', () => {
       it('returns an array of search names', () => {
-        const extensions = getSearchNames({ configName: 'foo', extensions: ['.js'] })
-
-        expect(extensions)
+        expect(getSearchNames({ configName: 'foo', extensions: ['.js'] }))
           .to.have.members(['foo.js'])
       })
     })
 
     describe('With several extensions in `extensions`', () => {
       it('returns an array of search names', () => {
-        const extensions = getSearchNames({ configName: 'foo', extensions: ['.js', '.coffee'] })
-
-        expect(extensions)
+        expect(getSearchNames({ configName: 'foo', extensions: ['.js', '.coffee'] }))
           .to.have.members(['foo.js', 'foo.coffee'])
       })
     })
