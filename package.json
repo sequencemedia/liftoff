@@ -1,7 +1,7 @@
 {
   "name": "@sequencemedia/liftoff",
   "version": "1.0.1",
-  "description": "The ECMAScript interface to the command line interface for Gulp",
+  "description": "The ECMAScript interface to the command line interface to Gulp",
   "keywords": [
     "command line"
   ],
@@ -36,7 +36,7 @@
     "@babel/core": "^7.21.5",
     "@babel/eslint-parser": "^7.21.3",
     "@babel/preset-env": "^7.21.5",
-    "@sequencemedia/hooks": "^1.0.396",
+    "@sequencemedia/hooks": "^1.0.401",
     "chai": "^4.3.7",
     "coffeescript": "^2.7.0",
     "eslint": "^8.39.0",
