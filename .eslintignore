@@ -1,5 +1,4 @@
 .circleci
 .git
 .github
-.husky
 node_modules
