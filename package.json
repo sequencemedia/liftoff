@@ -33,7 +33,7 @@
     "resolve": "^1.22.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.8",
+    "@babel/core": "^7.22.9",
     "@babel/eslint-parser": "^7.22.7",
     "@babel/preset-env": "^7.22.7",
     "@sequencemedia/hooks": "^1.0.442",
