@@ -53,9 +53,6 @@
     "lib",
     "LICENSE"
   ],
-  "_moduleAliases": {
-    "~": "."
-  },
   "imports": {
     "#file-search": "./lib/file-search.js",
     "#find-config": "./lib/find-config.js",
@@ -65,5 +62,8 @@
     "#node-flags": "./lib/node-flags.js",
     "#register-loader": "./lib/register-loader.js",
     "#silent-require": "./lib/silent-require.js"
+  },
+  "_moduleAliases": {
+    "~": "."
   }
 }
