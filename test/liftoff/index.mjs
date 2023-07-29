@@ -5,7 +5,7 @@ import { use, expect } from 'chai'
 import sinon from 'sinon'
 import sinonChai from 'sinon-chai'
 import resolve from 'resolve'
-import Liftoff from '../../index.js'
+import Liftoff from '#liftoff'
 
 use(sinonChai)
 

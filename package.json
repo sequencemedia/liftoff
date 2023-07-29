@@ -19,7 +19,7 @@
   "scripts": {
     "lint": "eslint . --ext .js,.mjs",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha --recursive test/liftoff",
+    "test": "mocha -b --recursive test/liftoff",
     "prepare": "husky install"
   },
   "dependencies": {
@@ -38,7 +38,7 @@
     "@babel/plugin-syntax-import-assertions": "^7.22.5",
     "@babel/preset-env": "^7.22.9",
     "@sequencemedia/hooks": "^1.0.444",
-    "chai": "^5.0.0-alpha.1",
+    "chai": "4.3.7",
     "coffeescript": "^2.7.0",
     "eslint": "^8.46.0",
     "eslint-config-standard": "^17.1.0",
@@ -54,6 +54,7 @@
     "LICENSE"
   ],
   "imports": {
+    "#liftoff": "./index.js",
     "#file-search": "./lib/file-search.js",
     "#find-config": "./lib/find-config.js",
     "#get-cwd": "./lib/get-cwd.js",
