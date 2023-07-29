@@ -1,18 +1,15 @@
-require('module-alias/register')
-
-const chai = require('chai')
-const {
+import {
+  use,
   expect
-} = chai
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-
-const {
+} from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import {
   getNodeFlags,
   getNodeFlagsFromArgv
-} = require('~/lib/node-flags')
+} from '#node-flags'
 
-chai.use(sinonChai)
+use(sinonChai)
 
 describe('./lib/node-flags', () => {
   describe('`getNodeFlags()`', () => {

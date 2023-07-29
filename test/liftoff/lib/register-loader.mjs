@@ -1,22 +1,17 @@
-require('module-alias/register')
-
-const crypto = require('node:crypto')
-const path = require('node:path')
-
-const chai = require('chai')
-const {
-  expect
-} = chai
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-
-const registerLoader = require('~/lib/register-loader')
-
-const {
+import crypto from 'node:crypto'
+import path from 'node:path'
+import {
   EventEmitter
-} = require('events')
+} from 'node:events'
+import {
+  use,
+  expect
+} from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import registerLoader from '#register-loader'
 
-chai.use(sinonChai)
+use(sinonChai)
 
 const FIXTURES_PATH = path.resolve('./test/fixtures/register-loader')
 

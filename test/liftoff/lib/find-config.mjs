@@ -1,14 +1,9 @@
-require('module-alias/register')
-
-const crypto = require('node:crypto')
-const path = require('node:path')
-
-const chai = require('chai')
-const {
+import crypto from 'node:crypto'
+import path from 'node:path'
+import {
   expect
-} = chai
-
-const findConfig = require('~/lib/find-config')
+} from 'chai'
+import findConfig from '#find-config'
 
 describe('./lib/find-config', () => {
   describe('With `configName`', () => {

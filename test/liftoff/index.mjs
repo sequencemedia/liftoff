@@ -1,17 +1,13 @@
-require('module-alias/register')
+import { exec } from 'node:child_process'
+import crypto from 'node:crypto'
+import path from 'path'
+import { use, expect } from 'chai'
+import sinon from 'sinon'
+import sinonChai from 'sinon-chai'
+import resolve from 'resolve'
+import Liftoff from '../../index.js'
 
-const { exec } = require('node:child_process')
-const crypto = require('node:crypto')
-
-const path = require('path')
-const chai = require('chai')
-const { expect } = chai
-const sinon = require('sinon')
-const sinonChai = require('sinon-chai')
-const resolve = require('resolve')
-const Liftoff = require('~')
-
-chai.use(sinonChai)
+use(sinonChai)
 
 const NAME = 'MOCK LIFTOFF'
 
@@ -83,7 +79,7 @@ describe('Liftoff', () => {
               index: {
                 currentdir: path.resolve('./index.js'),
                 test: path.resolve('./test/fixtures/config-files/index.json'),
-                findingup: path.resolve('./test/liftoff/index.js')
+                findingup: null
               },
               package: {
                 currentdir: path.resolve('./package.json'),
@@ -140,11 +136,11 @@ describe('Liftoff', () => {
                 },
                 markdownTwo: {
                   path: '.',
-                  extensions: ['.json', '.js']
+                  extensions: ['.js', '.json']
                 },
                 textTwo: {
                   path: 'test/fixtures/config-files',
-                  extensions: ['.json', '.js']
+                  extensions: ['.js', '.json']
                 }
               }
             }
@@ -742,17 +738,17 @@ describe('Liftoff', () => {
 
         const moduleName = 'mocha'
 
-        liftoff.on('require', (name, module) => {
+        liftoff.on('require', async (name, module) => {
           expect(name)
             .to.equal(moduleName)
 
           expect(module)
-            .to.equal(require(moduleName))
+            .to.be.a('function')
 
           done()
         })
 
-        liftoff.requireLocal(moduleName, __dirname)
+        liftoff.requireLocal(moduleName, './test/liftoff')
       })
 
       it('emits a `requireFail` event with the module name', (done) => {
@@ -767,7 +763,7 @@ describe('Liftoff', () => {
           done()
         })
 
-        liftoff.requireLocal(moduleName, __dirname)
+        liftoff.requireLocal(moduleName, './test/liftoff')
       })
     })
 

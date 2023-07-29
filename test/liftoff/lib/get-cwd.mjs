@@ -1,13 +1,8 @@
-require('module-alias/register')
-
-const path = require('node:path')
-
-const chai = require('chai')
-const {
+import path from 'node:path'
+import {
   expect
-} = chai
-
-const getCwd = require('~/lib/get-cwd')
+} from 'chai'
+import getCwd from '#get-cwd'
 
 describe('./lib/get-cwd', () => {
   describe('With `cwd`', () => {

@@ -1,11 +1,7 @@
-require('module-alias/register')
-
-const chai = require('chai')
-const {
+import {
   expect
-} = chai
-
-const getOpts = require('~/lib/get-opts')
+} from 'chai'
+import getOpts from '#get-opts'
 
 const NAME = 'MOCK NAME'
 

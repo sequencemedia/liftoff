@@ -1,11 +1,7 @@
-require('module-alias/register')
-
-const chai = require('chai')
-const {
+import {
   expect
-} = chai
-
-const getSearchNames = require('~/lib/get-search-names')
+} from 'chai'
+import getSearchNames from '#get-search-names'
 
 describe('./lib/get-search-names', () => {
   describe('With valid opts', () => {

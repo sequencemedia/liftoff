@@ -12,16 +12,16 @@ const {
 const objectMap = require('object.map')
 const fined = require('fined')
 
-const getCwd = require('./lib/get-cwd')
-const findConfig = require('./lib/find-config')
-const fileSearch = require('./lib/file-search')
-const silentRequire = require('./lib/silent-require')
+const getCwd = require('./lib/get-cwd.js')
+const findConfig = require('./lib/find-config.js')
+const fileSearch = require('./lib/file-search.js')
+const silentRequire = require('./lib/silent-require.js')
 
-const getOpts = require('./lib/get-opts')
-const getSearchNames = require('./lib/get-search-names')
-const registerLoader = require('./lib/register-loader')
-const preloadModules = require('./lib/preload-modules')
-const nodeFlags = require('./lib/node-flags')
+const getOpts = require('./lib/get-opts.js')
+const getSearchNames = require('./lib/get-search-names.js')
+const registerLoader = require('./lib/register-loader.js')
+const preloadModules = require('./lib/preload-modules.js')
+const nodeFlags = require('./lib/node-flags.js')
 
 class Liftoff extends EventEmitter {
   constructor (opts) {

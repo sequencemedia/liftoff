@@ -1,19 +1,16 @@
-require('module-alias/register')
-
-const crypto = require('node:crypto')
-const path = require('node:path')
-
-const chai = require('chai')
-const {
+import crypto from 'node:crypto'
+import path from 'node:path'
+import {
   expect
-} = chai
+} from 'chai'
+import silentRequire from '#silent-require'
 
-const silentRequire = require('~/lib/silent-require')
+import PACKAGE from '../../../package.json' assert { type: 'json' }
 
 describe('./lib/silent-require', () => {
   it('requires', () => {
     expect(silentRequire(path.resolve('./package.json')))
-      .to.eql(require('~/package'))
+      .to.eql(PACKAGE)
   })
 
   it('does not throw', () => {
