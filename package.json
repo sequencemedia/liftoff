@@ -37,11 +37,11 @@
     "resolve": "^1.22.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.11",
-    "@babel/eslint-parser": "^7.22.11",
+    "@babel/core": "^7.22.15",
+    "@babel/eslint-parser": "^7.22.15",
     "@babel/plugin-syntax-import-assertions": "^7.22.5",
-    "@babel/preset-env": "^7.22.14",
-    "@sequencemedia/hooks": "^1.0.449",
+    "@babel/preset-env": "^7.22.15",
+    "@sequencemedia/hooks": "^1.0.450",
     "chai": "4.3.7",
     "coffeescript": "^2.7.0",
     "eslint": "^8.48.0",
