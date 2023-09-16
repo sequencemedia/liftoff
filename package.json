@@ -34,10 +34,10 @@
     "is-plain-object": "^5.0.0",
     "object.map": "^1.0.1",
     "rechoir": "^0.8.0",
-    "resolve": "^1.22.4"
+    "resolve": "^1.22.6"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.17",
+    "@babel/core": "^7.22.19",
     "@babel/eslint-parser": "^7.22.15",
     "@babel/plugin-syntax-import-assertions": "^7.22.5",
     "@babel/preset-env": "^7.22.15",
