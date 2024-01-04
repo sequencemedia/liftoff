@@ -3,7 +3,7 @@ import crypto from 'node:crypto'
 import path from 'path'
 import { use, expect } from 'chai'
 import sinon from 'sinon'
-import sinonChai from 'sinon-chai'
+import sinonChai from '@sequencemedia/sinon-chai'
 import resolve from 'resolve'
 import Liftoff from '#liftoff'
 

@@ -42,6 +42,7 @@
     "@babel/plugin-syntax-import-assertions": "^7.23.3",
     "@babel/preset-env": "^7.23.7",
     "@sequencemedia/hooks": "^1.0.471",
+    "@sequencemedia/sinon-chai": "^0.0.5",
     "chai": "^5.0.0",
     "coffeescript": "^2.7.0",
     "eslint": "^8.56.0",
@@ -49,8 +50,7 @@
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "module-alias": "^2.2.3",
-    "sinon": "^17.0.1",
-    "sinon-chai": "^3.7.0"
+    "sinon": "^17.0.1"
   },
   "files": [
     "index.js",
