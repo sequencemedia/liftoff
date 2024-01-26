@@ -37,17 +37,17 @@
     "resolve": "^1.22.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/eslint-parser": "^7.23.3",
+    "@babel/core": "^7.23.9",
+    "@babel/eslint-parser": "^7.23.9",
     "@babel/plugin-syntax-import-assertions": "^7.23.3",
-    "@babel/preset-env": "^7.23.8",
-    "@sequencemedia/hooks": "^1.0.474",
+    "@babel/preset-env": "^7.23.9",
+    "@sequencemedia/hooks": "^1.0.475",
     "@sequencemedia/sinon-chai": "^0.0.6",
-    "chai": "^5.0.0",
+    "chai": "^5.0.3",
     "coffeescript": "^2.7.0",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
-    "husky": "^9.0.1",
+    "husky": "^9.0.6",
     "mocha": "^10.2.0",
     "module-alias": "^2.2.3",
     "sinon": "^17.0.1"
