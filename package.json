@@ -41,7 +41,7 @@
     "@babel/eslint-parser": "^7.23.9",
     "@babel/plugin-syntax-import-assertions": "^7.23.3",
     "@babel/preset-env": "^7.23.9",
-    "@sequencemedia/hooks": "^1.0.475",
+    "@sequencemedia/hooks": "^1.0.476",
     "@sequencemedia/sinon-chai": "^0.0.6",
     "chai": "^5.0.3",
     "coffeescript": "^2.7.0",
