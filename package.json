@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/liftoff",
-  "version": "1.0.122",
+  "version": "1.0.123",
   "description": "The ECMAScript interface to the command line interface to Gulp",
   "keywords": [
     "command line"
