@@ -24,7 +24,7 @@
     "lint": "eslint . --ext .mjs,.cjs,.js",
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha -b --recursive test/liftoff",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "extend": "^3.0.2",
