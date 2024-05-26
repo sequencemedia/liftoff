@@ -17,14 +17,14 @@
   ],
   "license": "MIT",
   "engines": {
-    "node": ">=18.12.0"
+    "node": "<=21.7.3"
   },
   "repository": "sequencemedia/liftoff",
   "scripts": {
     "lint": "eslint . --ext .mjs,.cjs,.js",
     "lint:fix": "npm run lint -- --fix",
-    "test": "mocha -b --recursive test/liftoff",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "mocha -b --recursive test/liftoff"
   },
   "dependencies": {
     "extend": "^3.0.2",
@@ -37,20 +37,20 @@
     "resolve": "^1.22.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
-    "@babel/eslint-parser": "^7.24.1",
-    "@babel/plugin-syntax-import-assertions": "^7.24.1",
-    "@babel/preset-env": "^7.24.4",
-    "@sequencemedia/hooks": "^1.0.489",
+    "@babel/core": "^7.24.6",
+    "@babel/eslint-parser": "^7.24.6",
+    "@babel/plugin-syntax-import-assertions": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@sequencemedia/hooks": "^1.0.492",
     "@sequencemedia/sinon-chai": "^0.0.6",
-    "chai": "^5.1.0",
+    "chai": "^5.1.1",
     "coffeescript": "^2.7.0",
     "eslint": "8.57.0",
     "eslint-config-standard": "^17.1.0",
     "husky": "^9.0.11",
     "mocha": "^10.4.0",
     "module-alias": "^2.2.3",
-    "sinon": "^17.0.1"
+    "sinon": "^18.0.0"
   },
   "files": [
     "index.js",
@@ -58,12 +58,12 @@
     "LICENSE"
   ],
   "imports": {
-    "#liftoff": "./index.js",
     "#file-search": "./lib/file-search.js",
     "#find-config": "./lib/find-config.js",
     "#get-cwd": "./lib/get-cwd.js",
     "#get-opts": "./lib/get-opts.js",
     "#get-search-names": "./lib/get-search-names.js",
+    "#liftoff": "./index.js",
     "#node-flags": "./lib/node-flags.js",
     "#register-loader": "./lib/register-loader.js",
     "#silent-require": "./lib/silent-require.js"
