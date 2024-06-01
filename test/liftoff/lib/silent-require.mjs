@@ -5,7 +5,7 @@ import {
 } from 'chai'
 import silentRequire from '#silent-require'
 
-import PACKAGE from '../../../package.json' assert { type: 'json' }
+import PACKAGE from '../../../package.json' with { type: 'json' }
 
 describe('./lib/silent-require', () => {
   it('requires', () => {
