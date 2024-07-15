@@ -37,13 +37,13 @@
     "resolve": "^1.22.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.8",
+    "@babel/core": "^7.24.9",
     "@babel/eslint-parser": "^7.24.8",
     "@babel/plugin-syntax-import-assertions": "^7.24.7",
     "@babel/preset-env": "^7.24.8",
-    "@sequencemedia/eslint-config-standard": "^0.0.14",
+    "@sequencemedia/eslint-config-standard": "^0.0.15",
     "@sequencemedia/hooks": "^1.0.504",
-    "@sequencemedia/sinon-chai": "^0.0.9",
+    "@sequencemedia/sinon-chai": "^0.0.10",
     "chai": "^5.1.1",
     "coffeescript": "^2.7.0",
     "eslint": "^9.7.0",
