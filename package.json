@@ -41,9 +41,9 @@
     "@babel/eslint-parser": "^7.25.1",
     "@babel/plugin-syntax-import-assertions": "^7.25.6",
     "@babel/preset-env": "^7.25.4",
-    "@sequencemedia/eslint-config-standard": "^0.0.62",
-    "@sequencemedia/hooks": "^1.0.552",
-    "@sequencemedia/sinon-chai": "^0.0.56",
+    "@sequencemedia/eslint-config-standard": "^0.0.63",
+    "@sequencemedia/hooks": "^1.0.553",
+    "@sequencemedia/sinon-chai": "^0.0.57",
     "chai": "^5.1.1",
     "coffeescript": "^2.7.0",
     "eslint": "^9.10.0",
@@ -51,7 +51,7 @@
     "husky": "^9.1.6",
     "mocha": "^10.7.3",
     "module-alias": "^2.2.3",
-    "sinon": "^18.0.1"
+    "sinon": "^19.0.0"
   },
   "files": [
     "index.js",
