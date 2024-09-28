@@ -12,4 +12,7 @@
 # Deps
 .depsrc
 
+# Hooks
+.husky/hooks
+
 .gulp.*
