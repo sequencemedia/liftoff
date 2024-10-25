@@ -42,7 +42,7 @@
     "@babel/plugin-syntax-import-assertions": "^7.25.9",
     "@babel/preset-env": "^7.25.9",
     "@sequencemedia/eslint-config-standard": "^0.0.77",
-    "@sequencemedia/sinon-chai": "^0.0.73",
+    "@sequencemedia/sinon-chai": "^0.0.74",
     "chai": "^5.1.2",
     "coffeescript": "^2.7.0",
     "eslint": "^9.13.0",
