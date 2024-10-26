@@ -37,10 +37,10 @@
     "resolve": "^1.22.8"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.9",
+    "@babel/core": "^7.26.0",
     "@babel/eslint-parser": "^7.25.9",
-    "@babel/plugin-syntax-import-assertions": "^7.25.9",
-    "@babel/preset-env": "^7.25.9",
+    "@babel/plugin-syntax-import-assertions": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
     "@sequencemedia/eslint-config-standard": "^0.0.77",
     "@sequencemedia/sinon-chai": "^0.0.74",
     "chai": "^5.1.2",
