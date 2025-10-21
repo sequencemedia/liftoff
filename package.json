@@ -34,14 +34,14 @@
     "is-plain-object": "^5.0.0",
     "object.map": "^1.0.1",
     "rechoir": "^0.8.0",
-    "resolve": "^1.22.10"
+    "resolve": "^1.22.11"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",
     "@babel/eslint-parser": "^7.28.4",
     "@babel/plugin-syntax-import-assertions": "^7.27.1",
     "@babel/preset-env": "^7.28.3",
-    "@sequencemedia/eslint-config-standard": "^0.2.94",
+    "@sequencemedia/eslint-config-standard": "^0.2.95",
     "@sequencemedia/sinon-chai": "^0.0.199",
     "chai": "^6.2.0",
     "coffeescript": "^2.7.0",
