@@ -50,7 +50,7 @@
     "husky": "^9.1.7",
     "mocha": "^11.7.5",
     "module-alias": "^2.2.3",
-    "sinon": "^21.0.0"
+    "sinon": "^21.0.1"
   },
   "files": [
     "index.js",
