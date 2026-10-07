@@ -34,7 +34,7 @@
     "is-plain-object": "^5.1.0",
     "object.map": "^1.0.1",
     "rechoir": "^0.8.0",
-    "resolve": "^1.22.12"
+    "resolve": "^1.22.13"
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
